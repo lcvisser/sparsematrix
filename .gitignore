@@ -1,5 +1,6 @@
 *
 !.gitignore
 !sparsematrix.h
+!testrunner.cpp
 
 

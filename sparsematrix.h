@@ -27,11 +27,25 @@ class SparseMatrix
         std::map<std::pair<int, int>, T> _values;
 
     public:
+        SparseMatrix() = default;
+        SparseMatrix(const SparseMatrix& other) = default;
+        SparseMatrix(std::initializer_list<std::pair<const std::pair<int, int>, T>> m) : _values{m} { }
+
         T& operator()(int i, int j)
         {
             // Keys are inserted if non-existing
             assert(i < M && j < N);
             return _values[{i, j}];
+        }
+
+        int size() const
+        {
+            return M * N;
+        }
+
+        int allocated() const
+        {
+            return std::distance(_values.cbegin(), _values.cend());
         }
 
         bool peek(int i, int j) const
