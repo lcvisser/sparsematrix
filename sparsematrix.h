@@ -73,6 +73,16 @@ class SparseMatrix
             return _values.cend();
         }
 
+        bool operator==(const SparseMatrix& rhs) const
+        {
+            return _values == rhs._values;
+        }
+
+        bool operator!=(const SparseMatrix& rhs) const
+        {
+            return !(_values == rhs._values);
+        }
+
         SparseMatrix& operator+=(const SparseMatrix& rhs)
         {
             auto elem = rhs.cbegin();
@@ -125,7 +135,7 @@ class SparseMatrix
         {
             // Create a column-major view on the second operand
             using wrapped_key = std::reference_wrapper<const std::pair<int, int>>;
-            using wrapped_value = std::reference_wrapper<const int>;
+            using wrapped_value = std::reference_wrapper<const T>;
             std::map<wrapped_key, wrapped_value, ColumnMajorOrder> op2_transpose;
             op2_transpose.insert(op2._values.cbegin(), op2._values.cend());
 
