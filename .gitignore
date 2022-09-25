@@ -1,6 +1,7 @@
-*
-!.gitignore
-!sparsematrix.h
-!testrunner.cpp
+.vscode
+.DS_Store
 
+testrunner
+main
+*.dSYM
 
