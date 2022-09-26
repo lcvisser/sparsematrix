@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cassert>
 #include <functional>
 #include <map>
 #include <tuple>
