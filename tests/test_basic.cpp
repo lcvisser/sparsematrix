@@ -36,6 +36,11 @@ TEST_CASE("allocation only when accessed")
     CHECK(m.peek(1, 2) == true);
 }
 
+TEST_CASE("out of bounds allocation not allowed")
+{
+    REQUIRE_THROWS_AS( (SparseMatrix<2, 3, int>({ { {3, 4}, 1 } })), const std::out_of_range& );
+}
+
 TEST_CASE_TEMPLATE("arithmetic operators", T, int, float, double)
 {
     SparseMatrix<2, 2, T> s {
@@ -96,9 +101,4 @@ TEST_CASE_TEMPLATE("arithmetic operators", T, int, float, double)
         CHECK(u(1, 0) == s(1, 0) * t(0, 0) + s(1, 1) * t(1, 0));
         CHECK(u(1, 1) == s(1, 0) * t(0, 1) + s(1, 1) * t(1, 1));
     }
-}
-
-TEST_CASE_TEMPLATE("multiplication edge cases", T, int, float, double)
-{
-
 }

@@ -7,4 +7,5 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_subdirectory(tests test)
-add_test(NAME unittest COMMAND testrunner)
+add_test(NAME basic COMMAND test_basic)
+add_test(NAME multiplication_1d COMMAND test_mult_1d)

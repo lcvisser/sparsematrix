@@ -18,6 +18,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 #include <algorithm>
 #include <cassert>
+#include <stdexcept>
 #include <functional>
 #include <map>
 #include <tuple>
@@ -48,7 +49,19 @@ class SparseMatrix
     public:
         SparseMatrix() = default;
         SparseMatrix(const SparseMatrix& other) = default;
-        SparseMatrix(std::initializer_list<std::pair<const std::pair<int, int>, T>> m) : _values{m} { }
+
+        SparseMatrix(std::initializer_list<std::pair<const std::pair<int, int>, T>> m) : _values{m}
+        {
+            for (const auto elem : m)
+            {
+                int i, j;
+                std::tie(i, j) = elem.first;
+                if (i >= M || j >= N)
+                {
+                    throw std::out_of_range("index out of bounds");
+                }
+            }
+        }
 
         T& operator()(int i, int j)
         {
@@ -69,6 +82,7 @@ class SparseMatrix
 
         bool peek(int i, int j) const
         {
+            assert(i < M && j < N);
             bool has_value = false;
             try
             {
