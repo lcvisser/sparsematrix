@@ -174,6 +174,11 @@ class SparseMatrix
 
             SparseMatrix<M, P, T> lhs;
 
+            if (op1.allocated() == 0 || op2.allocated() == 0)
+            {
+                return lhs;
+            }
+
             // Iterate over each row of op1, adding element-wise product only if column of op1 matches row of op2. If
             // column number of op2 changes, reset op1 iterator to the beginning of the row. When the end of op2 is
             // reached, jump to the next row of op1. In between, increment op1 or op2 to catch up.

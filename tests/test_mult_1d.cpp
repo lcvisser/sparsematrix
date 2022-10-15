@@ -6,7 +6,7 @@
 
 TEST_CASE_TEMPLATE("multiplication 1d cases", T, int, float, double)
 {
-    SUBCASE("1xn multiplication")
+    SUBCASE("vector to scalar multiplication")
     {
         SparseMatrix<1, 3, T> s = {
             { {0, 0}, 1 },
@@ -24,7 +24,52 @@ TEST_CASE_TEMPLATE("multiplication 1d cases", T, int, float, double)
         CHECK(u(0, 0) == 32);
     }
 
-    SUBCASE("nx1 multiplication")
+    SUBCASE("sparse vector to scalar multiplication")
+    {
+        SparseMatrix<1, 3, T> s = {
+            { {0, 1}, 3 }
+        };
+
+        SparseMatrix<3, 1, T> t = {
+            { {1, 0}, 2 }
+        };
+
+        SparseMatrix<1, 1, T> u = s * t;
+        CHECK(u.allocated() == 1);
+        CHECK(u(0, 0) == 6);
+    }
+
+    SUBCASE("sparse vector to zero scalar multiplication")
+    {
+        SparseMatrix<1, 3, T> s = {
+            { {0, 2}, 3 }
+        };
+
+        SparseMatrix<3, 1, T> t = {
+            { {1, 0}, 2 }
+        };
+
+        SparseMatrix<1, 1, T> u = s * t;
+        CHECK(u.allocated() == 0);
+        CHECK(u(0, 0) == 0);
+    }
+
+    SUBCASE("zero vector to scalar multiplication")
+    {
+        SparseMatrix<1, 3, T> s = {
+            { {0, 0}, 1 },
+            { {0, 1}, 2 },
+            { {0, 2}, 3 }
+        };
+
+        SparseMatrix<3, 1, T> t;
+
+        SparseMatrix<1, 1, T> u = s * t;
+        CHECK(u.allocated() == 0);
+        CHECK(u(0, 0) == 0);
+    }
+
+    SUBCASE("vector to matrix multiplication")
     {
         SparseMatrix<3, 1, T> s = {
             { {0, 0}, 1 },
