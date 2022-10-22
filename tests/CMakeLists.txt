@@ -7,5 +7,8 @@ target_include_directories(test_mult_1d PRIVATE ../sparsematrix)
 add_executable(test_mult_2d test_mult_2d.cpp)
 target_include_directories(test_mult_2d PRIVATE ../sparsematrix)
 
+add_executable(test_scaling test_scaling.cpp)
+target_include_directories(test_scaling PRIVATE ../sparsematrix)
+
 add_executable(test_dim_errors test_dim_errors.cpp)
 target_include_directories(test_dim_errors PRIVATE ../sparsematrix)

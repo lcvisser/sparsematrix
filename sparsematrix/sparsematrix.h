@@ -171,6 +171,21 @@ class SparseMatrix
             return lhs;
         }
 
+        friend SparseMatrix operator*(const T s, const SparseMatrix& op2)
+        {
+            SparseMatrix lhs = op2;
+            for (auto elem = lhs._values.begin(); elem != lhs._values.end(); ++elem)
+            {
+                elem->second *= s;
+            }
+            return lhs;
+        }
+
+        friend SparseMatrix operator*(const SparseMatrix& op1, const T s)
+        {
+            return s * op1;
+        }
+
         template <size_t P>
         friend SparseMatrix<M, P, T> operator*(const SparseMatrix<M, N, T>& op1, const SparseMatrix<N, P, T>& op2)
         {
