@@ -65,8 +65,12 @@ class SparseMatrix
 
         T& operator()(int i, int j)
         {
+            if (i >= M || j >= N)
+            {
+                throw std::out_of_range("index out of bounds");
+            }
+
             // Keys are inserted if non-existing
-            assert(i < M && j < N);
             return _values[{i, j}];
         }
 
@@ -82,7 +86,11 @@ class SparseMatrix
 
         bool peek(int i, int j) const
         {
-            assert(i < M && j < N);
+            if (i >= M || j >= N)
+            {
+                throw std::out_of_range("index out of bounds");
+            }
+
             bool has_value = false;
             try
             {

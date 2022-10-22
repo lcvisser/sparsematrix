@@ -36,11 +36,6 @@ TEST_CASE("allocation only when accessed")
     CHECK(m.peek(1, 2) == true);
 }
 
-TEST_CASE("out of bounds allocation not allowed")
-{
-    REQUIRE_THROWS_AS( (SparseMatrix<2, 3, int>({ { {3, 4}, 1 } })), const std::out_of_range& );
-}
-
 TEST_CASE_TEMPLATE("arithmetic operators", T, int, float, double)
 {
     SparseMatrix<2, 2, T> s {
