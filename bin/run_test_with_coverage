@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Parse input arguments
+COMPILER=$1
+EXE_PATH=$2
+EXE_NAME=$(basename $EXE_PATH)
+
+# Run with profiling
+case $COMPILER in
+*Clang)
+    # LLVM
+    LLVM_PROFILE_FILE="$EXE_NAME.profraw"
+    export LLVM_PROFILE_FILE="$LLVM_PROFILE_FILE"
+    eval "$EXE_PATH"
+    ;;
+GNU)
+    # GCC
+    ;;
+*)
+    echo "Unsupported compiler: $COMPILER"
+    exit 1
+    ;;
+esac

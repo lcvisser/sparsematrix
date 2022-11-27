@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Parse input arguments
+COMPILER=$1
+BIN_DIR=$2
+shift 2
+EXE_NAMES=$*
+
+# Run with profiling
+case $COMPILER in
+*Clang)
+    # LLVM
+
+    # Merge raw profile data
+    raw_files=""
+    for exe in $EXE_NAMES
+    do
+        raw_files="$raw_files $exe.profraw"
+    done
+    cmd="llvm-profdata merge $raw_files -o merged.profdata"
+    eval "$cmd"
+
+    # Create coverage report (2nd and subsequent binaries require -object flag)
+    bin_files="$BIN_DIR/$2"
+    shift 1
+    for exe in $*
+    do
+        bin_files="$bin_files -object $BIN_DIR/$exe"
+    done
+
+    cmd="llvm-cov report -instr-profile merged.profdata $bin_files ../sparsematrix/sparsematrix.h"
+    eval "$cmd"
+    cmd="llvm-cov show -format=html -output-dir=coverage_html -instr-profile merged.profdata $bin_files ../sparsematrix/sparsematrix.h"
+    eval "$cmd"
+    ;;
+GNU)
+    # GCC
+    ;;
+*)
+    echo "Unsupported compiler: $COMPILER"
+    exit 1
+    ;;
+esac
