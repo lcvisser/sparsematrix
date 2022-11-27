@@ -24,9 +24,9 @@ add_executable(test_mult_2d test_mult_2d.cpp)
 add_executable(test_scaling test_scaling.cpp)
 add_executable(test_dim_errors test_dim_errors.cpp)
 
-get_property(test_executables DIRECTORY ${WORKING_DIRECTORY} PROPERTY BUILDSYSTEM_TARGETS)
+get_property(TEST_EXECUTABLES DIRECTORY ${WORKING_DIRECTORY} PROPERTY BUILDSYSTEM_TARGETS)
 
-add_custom_target(unittests ALL DEPENDS ${test_executables})
+add_custom_target(unittests ALL DEPENDS ${TEST_EXECUTABLES})
 add_custom_command(TARGET unittests POST_BUILD
                    COMMAND ctest
                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
@@ -34,6 +34,6 @@ add_custom_command(TARGET unittests POST_BUILD
 
 add_custom_target(coverage ALL DEPENDS unittests)
 add_custom_command(TARGET coverage POST_BUILD
-                   COMMAND ${CMAKE_SOURCE_DIR}/bin/collect_coverage ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CURRENT_BINARY_DIR} ${test_executables}
+                   COMMAND ${CMAKE_SOURCE_DIR}/bin/collect_coverage ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CURRENT_BINARY_DIR} ${TEST_EXECUTABLES}
                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
                    COMMENT "Generating coverage report...")
