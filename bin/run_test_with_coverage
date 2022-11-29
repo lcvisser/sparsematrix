@@ -15,6 +15,7 @@ case $COMPILER in
     ;;
 GNU)
     # GCC
+    eval "$EXE_PATH"
     ;;
 *)
     echo "Unsupported compiler: $COMPILER"

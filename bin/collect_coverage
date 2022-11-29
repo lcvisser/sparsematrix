@@ -35,6 +35,18 @@ case $COMPILER in
     ;;
 GNU)
     # GCC
+
+    # Create coverage report (FIXME: assumes exes and source have the same name)
+    dirs=""
+    for exe in $EXE_NAMES
+    do
+        dirs="$dirs -d testbin/CMakeFiles/$exe.dir/"
+    done
+
+    cmd="lcov -c -b ../tests $dirs --gcov-tool /opt/local/bin/gcov -o out.info"
+    eval "$cmd"
+    cmd="genhtml out.info -o coverage"
+    eval "$cmd"
     ;;
 *)
     echo "Unsupported compiler: $COMPILER"
