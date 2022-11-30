@@ -22,9 +22,9 @@ TEST_CASE_TEMPLATE("create a matrix", T, int, float, double)
     CHECK(m(1, 2) == 6);
 }
 
-TEST_CASE("allocation only when accessed")
+TEST_CASE_TEMPLATE("allocation only when accessed", T, int, float, double)
 {
-    SparseMatrix<2, 3, int> m;
+    SparseMatrix<2, 3, T> m;
 
     CHECK(m.size() == 6);
     CHECK(m.allocated() == 0);
