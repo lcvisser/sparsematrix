@@ -11,11 +11,11 @@ case $COMPILER in
     # LLVM
     LLVM_PROFILE_FILE="$EXE_NAME.profraw"
     export LLVM_PROFILE_FILE="$LLVM_PROFILE_FILE"
-    eval "$EXE_PATH"
+    exec "$EXE_PATH"
     ;;
 GNU)
     # GCC
-    eval "$EXE_PATH"
+    exec "$EXE_PATH"
     ;;
 *)
     echo "Unsupported compiler: $COMPILER"

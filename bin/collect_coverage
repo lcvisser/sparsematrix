@@ -17,8 +17,7 @@ case $COMPILER in
     do
         raw_files="$raw_files $exe.profraw"
     done
-    cmd="llvm-profdata merge $raw_files -o merged.profdata"
-    eval "$cmd"
+    llvm-profdata merge $raw_files -o merged.profdata
 
     # Create coverage report (2nd and subsequent binaries require -object flag)
     bin_files="$BIN_DIR/$2"
@@ -28,10 +27,8 @@ case $COMPILER in
         bin_files="$bin_files -object $BIN_DIR/$exe"
     done
 
-    cmd="llvm-cov report -instr-profile merged.profdata $bin_files ../sparsematrix/sparsematrix.h"
-    eval "$cmd"
-    cmd="llvm-cov show -format=html -output-dir=coverage_html -instr-profile merged.profdata $bin_files ../sparsematrix/sparsematrix.h"
-    eval "$cmd"
+    llvm-cov report -instr-profile merged.profdata $bin_files ../sparsematrix/sparsematrix.h
+    llvm-cov show -format=html -output-dir=coverage_html -instr-profile merged.profdata $bin_files ../sparsematrix/sparsematrix.h
     ;;
 GNU)
     # GCC
@@ -43,10 +40,8 @@ GNU)
         dirs="$dirs -d testbin/CMakeFiles/$exe.dir/"
     done
 
-    cmd="lcov -c -b ../tests $dirs --gcov-tool /opt/local/bin/gcov -o out.info"
-    eval "$cmd"
-    cmd="genhtml out.info -o coverage"
-    eval "$cmd"
+    lcov -c -b ../tests $dirs --gcov-tool /opt/local/bin/gcov -o out.info
+    genhtml out.info -o coverage_html
     ;;
 *)
     echo "Unsupported compiler: $COMPILER"
