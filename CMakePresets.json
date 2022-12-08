@@ -1,0 +1,25 @@
+{
+    "version": 5,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 24,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default-configure-coverage",
+            "description": "Default base configuration preset for coverage",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS": "-Wall -fkeep-inline-functions -fkeep-static-functions -fprofile-arcs -ftest-coverage"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default-build-coverage",
+            "configurePreset": "default-configure-coverage",
+            "configuration": "Debug"
+        }
+    ]
+}
