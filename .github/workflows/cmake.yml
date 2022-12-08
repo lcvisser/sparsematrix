@@ -27,7 +27,7 @@ jobs:
       run: ctest
 
     - name: Collect coverage
-      working-directory:
+      working-directory: ${{github.workspace}}/build
       run: |
-        lcov --capture --directory testbin/ --include "$SRCDIR/sparsematrix.h" --gcov-tool /opt/local/bin/gcov --output-file coverage.info
+        lcov --capture --directory testbin/ --include "${{github.workspace}}/sparsematrix/sparsematrix.h" --output-file coverage.info
         lcov --list coverage.info
