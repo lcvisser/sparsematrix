@@ -31,6 +31,6 @@ jobs:
       run: |
         lcov --capture --directory testbin/ --include "${{github.workspace}}/sparsematrix/sparsematrix.h" --output-file coverage.info
         coverage=$( lcov --list coverage.info | grep -e '^sparsematrix.h' | awk -F'[[:space:]]+' '{gsub(/[^[:digit:]\.]/, "", $2); print $2}' )
-        exit $( echo "$coverage > $min_coverage" | bc -l )
+        exit $( echo "$coverage < $min_coverage" | bc -l )
       env:
         min_coverage: 90
