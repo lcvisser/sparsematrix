@@ -5,12 +5,15 @@
 This is a sparse matrix implementation in C++11. This is primarily a project for me to explore modern C++, but perhaps
 can be useful for others.
 
-## Toolchains
+## Building
 
-The following CMake toolchains are provided for convience; for Clang:
+CMake presets are defined for GCC, but they should work with clang as well.
 
-`cmake --toolchain ../macports_clang.cmake ..`
+```
+cmake --preset <preset>
+cmake --build --preset <preset>
+```
 
-and for GCC:
+Currently defined presets:
 
-`cmake --toolchain ../macports_gcc.cmake ..`
+ - `default-configure-coverage`: build with coverage
