@@ -33,6 +33,7 @@ TEST_CASE_TEMPLATE("bounds checks", T, int, float, double)
         SparseMatrix<2, 3, T> s;
         T x;
         REQUIRE_THROWS_AS( x = s(4, 5), const std::out_of_range& );
+        (void) x;  // Suppress warning on unused variable 'x'
     }
 
     SUBCASE("out of bounds allocation")
