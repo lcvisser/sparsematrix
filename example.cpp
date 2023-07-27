@@ -18,7 +18,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 #include <iostream>
 
-#include "sparsematrix.h"
+#include "sparsematrix/sparsematrix.h"
 
 template<size_t M, size_t N, typename T>
 std::ostream& operator<<(std::ostream& os, const SparseMatrix<M, N, T>& m)
@@ -52,37 +52,35 @@ std::ostream& operator<<(std::ostream& os, const SparseMatrix<M, N, T>& m)
 int main(int argc, char* argv[])
 {
     SparseMatrix<2, 2, int> s;
-    SparseMatrix<2, 2, int> t;
-    SparseMatrix<2, 3, int> u;
-
     s(1, 1) = 4;
     s(0, 1) = 2;
     std::cout << "s = \n" << s;
-    std::cout << "-s = \n" << -s;
-    std::cout << "+s = \n" << +s;
 
+    SparseMatrix<2, 2, int> t;
     t(0, 0) = 1;
     t(1, 0) = 3;
     t(1, 1) = 4;
     std::cout << "t = \n" << t;
 
-    std::cout << "s + t = \n" << s + t;
-    std::cout << "s - t = \n" << s - t;
-
+    SparseMatrix<2, 3, int> u;
     u(0, 0) = 1;
     u(0, 1) = 2;
     u(0, 2) = 3;
     u(1, 0) = 4;
     u(1, 1) = 5;
     u(1, 2) = 6;
-    std::cout << "t = \n" << t;
     std::cout << "u = \n" << u;
+
+    std::cout << "Unitary operations:\n";
+    std::cout << "-s = \n" << -s;
+    std::cout << "+s = \n" << +s;
+
+    std::cout << "Addition and subtraction:\n";
+    std::cout << "s + t = \n" << s + t;
+    std::cout << "s - t = \n" << s - t;
+
+    std::cout << "Multiplication:\n";
     std::cout << "t * u = \n" << s * t;
 
-    for (auto iter = t.cbegin(); iter != t.cend(); ++iter)
-    {
-        std::cout << iter->second << ", ";
-    }
-    std::cout << std::endl;
     return 0;
 }
