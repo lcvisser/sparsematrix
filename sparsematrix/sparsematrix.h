@@ -30,8 +30,8 @@ struct ColumnMajorOrder
     bool operator()(const std::pair<int, int>& lhs, const std::pair<int, int>& rhs) const
     {
         return (lhs.second < rhs.second) ? true :  // check column (<)
-                (lhs.second > rhs.second) ? false : // check column (>)
-                (lhs.first < rhs.first) ? true : false; // columns equal, check row
+                (lhs.second > rhs.second) ? false :  // check column (>)
+                (lhs.first < rhs.first) ? true : false;  // columns equal, check row
     }
 };
 
@@ -41,8 +41,13 @@ struct ColumnMajorOrder
 template <size_t M, size_t N, typename T>
 class SparseMatrix
 {
-    //private:
-    public:
+    // Make every instantiation of SparseMatrix a friend: for addition and subtraction only identically parameterized
+    // instances need to be friends, but for multiplication instances SparseMatrix<N, P, T> need to be friends for any
+    // size_t P, but we cannot do partial specialization.
+    template <size_t, size_t, typename>
+    friend class SparseMatrix;
+
+    private:
         // Keys are pairs (i,j), which are sorted first by i and thn by j, resulting in storage in row-major order
         std::map<std::pair<int, int>, T> _values;
 
