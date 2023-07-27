@@ -187,12 +187,6 @@ class SparseMatrix
         template <size_t P>
         friend SparseMatrix<M, P, T> operator*(const SparseMatrix<M, N, T>& op1, const SparseMatrix<N, P, T>& op2)
         {
-            // Create a column-major view on the second operand
-            using wrapped_key = std::reference_wrapper<const std::pair<size_t, size_t>>;
-            using wrapped_value = std::reference_wrapper<const T>;
-            std::map<wrapped_key, wrapped_value, ColumnMajorOrder> op2_transpose;
-            op2_transpose.insert(op2.cbegin(), op2.cend());
-
             SparseMatrix<M, P, T> lhs;
 
             if (op1.allocated() == 0 || op2.allocated() == 0)
@@ -200,104 +194,26 @@ class SparseMatrix
                 return lhs;
             }
 
-            // Iterate over each row of op1, adding element-wise product only if column of op1 matches row of op2. If
-            // column number of op2 changes, reset op1 iterator to the beginning of the row. When the end of op2 is
-            // reached, jump to the next row of op1. In between, increment op1 or op2 to catch up.
-            size_t op1_row, op1_col;
-            size_t op2_row, op2_col;
-
-            auto op1_elem = op1.cbegin();
-            auto op1_rowstart_elem = op1.cbegin();
-            auto op2_elem = op2_transpose.cbegin();
-            while (op1_elem != op1.cend())
+            for (size_t r = 0; r < M; ++r)
             {
-                while (op2_elem != op2_transpose.cend())
+                for (size_t c = 0; c < P; ++c)
                 {
-                    op1_row = op1_elem->first.first;
-                    op1_col = op1_elem->first.second;
-                    op2_row = op2_elem->first.get().first;
-                    op2_col = op2_elem->first.get().second;
-                    T op1_value = op1_elem->second;
-                    T op2_value = op2_elem->second.get();
-
-                    if (op1_col < op2_row)
+                    // For C = A * B, element C(x,y) = sum_i A(x,i) * B(i, y)
+                    T v = 0;
+                    for (size_t i = 0; i < N; ++i)
                     {
-                        ++op1_elem;
-                    }
-                    else if (op1_col == op2_row)
-                    {
-                        lhs(op1_row, op2_col) += op1_value * op2_value;
-                        ++op1_elem;
-                        ++op2_elem;
-                    }
-                    else  // op1_col > op2_row
-                    {
-                        ++op2_elem;
-                    }
-
-                    if (op1_elem == op1.cend())
-                    {
-                        // End of op1
-                        if (op2_col == P - 1)  // need to check previous value!
+                        if (op1.peek(r, i) && op2.peek(i, c))
                         {
-                            // Reached last column of op2, so done
-                            break;
-                        }
-                        else
-                        {
-                            // Reset op1 to the beginning of the row and start op2 at the next column
-                            op1_elem = op1_rowstart_elem;
-                            while ((op2_elem != op2_transpose.cend()) && (op2_elem->first.get().second == op2_col))
-                            {
-                                ++op2_elem;
-                            }
-                            break;
+                            v += const_cast<SparseMatrix<M, N, T>&>(op1)(r, i) * const_cast<SparseMatrix<N, P, T>&>(op2)(i, c);
                         }
                     }
-                    else if (op1_elem->first.first > op1_row)
+                    if (v != 0)
                     {
-                        // Reached end of row of op1
-                        if (op2_col == P - 1)  // need to check previous value!!=
-                        {
-                            // Reached last column of op2, so restart op2 iteration on next row
-                            op1_rowstart_elem = op1_elem;
-                            op2_elem = op2_transpose.cbegin();
-                            break;
-                        }
-                        else
-                        {
-                            // Reset op1 to the beginning of the row and start op2 at the next column
-                            op1_elem = op1_rowstart_elem;
-                            while ((op2_elem != op2_transpose.cend()) && (op2_elem->first.get().second == op2_col))
-                            {
-                                ++op2_elem;
-                            }
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        if (op2_elem == op2_transpose.cend())
-                        {
-                            // End of op2; go to next row of op1 and restart op2 iteration
-                            while ((op1_elem != op1.cend()) && (op1_elem->first.first == op1_row))
-                            {
-                                ++op1_elem;
-                            }
-                            op1_rowstart_elem = op1_elem;
-                            op2_elem = op2_transpose.cbegin();
-                            break;
-                        }
-                        else if (op2_elem->first.get().second != op2_col)
-                        {
-                            // Reached next column of op2, reset op1 to beginning of the row
-                            op1_elem = op1_rowstart_elem;
-                        }
+                        lhs(r, c) = v;
                     }
                 }
             }
 
             return lhs;
         }
-
 };
