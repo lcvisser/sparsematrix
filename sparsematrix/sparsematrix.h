@@ -92,14 +92,13 @@ class SparseMatrix
             }
 
             bool has_value = false;
-            try
-            {
-                auto v = _values.at({i, j});
-                has_value = true;
-            }
-            catch (const std::out_of_range& e)
+            if (_values.find({i, j}) == _values.end())
             {
                 has_value = false;
+            }
+            else
+            {
+                has_value = true;
             }
             return has_value;
         }
