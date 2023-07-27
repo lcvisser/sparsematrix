@@ -27,7 +27,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 struct ColumnMajorOrder
 {
-    bool operator()(const std::pair<int, int>& lhs, const std::pair<int, int>& rhs) const
+    bool operator()(const std::pair<size_t, size_t>& lhs, const std::pair<size_t, size_t>& rhs) const
     {
         return (lhs.second < rhs.second) ? true :  // check column (<)
                 (lhs.second > rhs.second) ? false :  // check column (>)
@@ -41,25 +41,19 @@ struct ColumnMajorOrder
 template <size_t M, size_t N, typename T>
 class SparseMatrix
 {
-    // Make every instantiation of SparseMatrix a friend: for addition and subtraction only identically parameterized
-    // instances need to be friends, but for multiplication instances SparseMatrix<N, P, T> need to be friends for any
-    // size_t P, but we cannot do partial specialization.
-    template <size_t, size_t, typename>
-    friend class SparseMatrix;
-
     private:
         // Keys are pairs (i,j), which are sorted first by i and thn by j, resulting in storage in row-major order
-        std::map<std::pair<int, int>, T> _values;
+        std::map<std::pair<size_t, size_t>, T> _values;
 
     public:
         SparseMatrix() = default;
         SparseMatrix(const SparseMatrix& other) = default;
 
-        SparseMatrix(std::initializer_list<std::pair<const std::pair<int, int>, T>> m) : _values{m}
+        SparseMatrix(std::initializer_list<std::pair<const std::pair<size_t, size_t>, T>> m) : _values{m}
         {
-            for (const auto elem : m)
+            for (const auto& elem : m)
             {
-                int i, j;
+                size_t i, j;
                 std::tie(i, j) = elem.first;
                 if (i >= M || j >= N)
                 {
@@ -68,7 +62,7 @@ class SparseMatrix
             }
         }
 
-        T& operator()(int i, int j)
+        T& operator()(size_t i, size_t j)
         {
             if (i >= M || j >= N)
             {
@@ -79,17 +73,17 @@ class SparseMatrix
             return _values[{i, j}];
         }
 
-        int size() const
+        size_t size() const
         {
             return M * N;
         }
 
-        int allocated() const
+        size_t allocated() const
         {
             return std::distance(_values.cbegin(), _values.cend());
         }
 
-        bool peek(int i, int j) const
+        bool peek(size_t i, size_t j) const
         {
             if (i >= M || j >= N)
             {
@@ -108,12 +102,12 @@ class SparseMatrix
             return has_value;
         }
 
-        const typename std::map<std::pair<int, int>, T>::const_iterator cbegin() const
+        const typename std::map<std::pair<size_t, size_t>, T>::const_iterator cbegin() const
         {
             return _values.cbegin();
         }
 
-        const typename std::map<std::pair<int, int>, T>::const_iterator cend() const
+        const typename std::map<std::pair<size_t, size_t>, T>::const_iterator cend() const
         {
             return _values.cend();
         }
@@ -133,7 +127,7 @@ class SparseMatrix
             auto elem = rhs.cbegin();
             while (elem != rhs.cend())
             {
-                int i, j;
+                size_t i, j;
                 std::tie(i, j) = elem->first;
                 this->operator()(i, j) += elem->second;
                 ++elem;
@@ -194,10 +188,10 @@ class SparseMatrix
         friend SparseMatrix<M, P, T> operator*(const SparseMatrix<M, N, T>& op1, const SparseMatrix<N, P, T>& op2)
         {
             // Create a column-major view on the second operand
-            using wrapped_key = std::reference_wrapper<const std::pair<int, int>>;
+            using wrapped_key = std::reference_wrapper<const std::pair<size_t, size_t>>;
             using wrapped_value = std::reference_wrapper<const T>;
             std::map<wrapped_key, wrapped_value, ColumnMajorOrder> op2_transpose;
-            op2_transpose.insert(op2._values.cbegin(), op2._values.cend());
+            op2_transpose.insert(op2.cbegin(), op2.cend());
 
             SparseMatrix<M, P, T> lhs;
 
@@ -209,8 +203,8 @@ class SparseMatrix
             // Iterate over each row of op1, adding element-wise product only if column of op1 matches row of op2. If
             // column number of op2 changes, reset op1 iterator to the beginning of the row. When the end of op2 is
             // reached, jump to the next row of op1. In between, increment op1 or op2 to catch up.
-            int op1_row, op1_col;
-            int op2_row, op2_col;
+            size_t op1_row, op1_col;
+            size_t op2_row, op2_col;
 
             auto op1_elem = op1.cbegin();
             auto op1_rowstart_elem = op1.cbegin();

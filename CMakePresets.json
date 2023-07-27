@@ -11,7 +11,7 @@
             "description": "Default base configuration preset for coverage",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
-                "CMAKE_CXX_FLAGS": "-Wall -fprofile-arcs -ftest-coverage"
+                "CMAKE_CXX_FLAGS": "-Wall -Wpedantic -fprofile-arcs -ftest-coverage"
             }
         }
     ],

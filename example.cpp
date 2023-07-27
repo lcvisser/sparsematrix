@@ -23,10 +23,10 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 template<size_t M, size_t N, typename T>
 std::ostream& operator<<(std::ostream& os, const SparseMatrix<M, N, T>& m)
 {
-    for (int i = 0; i < M; ++i)
+    for (size_t i = 0; i < M; ++i)
     {
         os << "|";
-        for (int j = 0; j < N; ++j)
+        for (size_t j = 0; j < N; ++j)
         {
             if (m.peek(i, j))
             {
