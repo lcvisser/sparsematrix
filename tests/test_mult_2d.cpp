@@ -35,6 +35,7 @@ TEST_CASE_TEMPLATE("multiplication 2d identity cases", T, int, float, double)
 
         SparseMatrix<2, 2, T> u = s * t;
 
+        CHECK(u.allocated() == 1);
         CHECK(u(0, 0) == 1);
         CHECK(u(0, 1) == 0);
         CHECK(u(1, 0) == 0);
@@ -52,6 +53,7 @@ TEST_CASE_TEMPLATE("multiplication 2d identity cases", T, int, float, double)
 
         SparseMatrix<2, 2, T> u = s * t;
 
+        CHECK(u.allocated() == 1);
         CHECK(u(0, 0) == 0);
         CHECK(u(0, 1) == 1);
         CHECK(u(1, 0) == 0);
@@ -69,6 +71,7 @@ TEST_CASE_TEMPLATE("multiplication 2d identity cases", T, int, float, double)
 
         SparseMatrix<2, 2, T> u = s * t;
 
+        CHECK(u.allocated() == 1);
         CHECK(u(0, 0) == 0);
         CHECK(u(0, 1) == 0);
         CHECK(u(1, 0) == 1);
@@ -86,6 +89,7 @@ TEST_CASE_TEMPLATE("multiplication 2d identity cases", T, int, float, double)
 
         SparseMatrix<2, 2, T> u = s * t;
 
+        CHECK(u.allocated() == 1);
         CHECK(u(0, 0) == 0);
         CHECK(u(0, 1) == 0);
         CHECK(u(1, 0) == 0);
@@ -106,6 +110,7 @@ TEST_CASE_TEMPLATE("multiplication 2d identity cases", T, int, float, double)
 
         SparseMatrix<2, 2, T> u = s * t;
 
+        CHECK(u.allocated() == 4);
         CHECK(u(0, 0) == 1);
         CHECK(u(0, 1) == 2);
         CHECK(u(1, 0) == 3);
