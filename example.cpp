@@ -82,5 +82,8 @@ int main(int argc, char* argv[])
     std::cout << "Multiplication:\n";
     std::cout << "t * u = \n" << s * t;
 
+    std::cout << "Transpose:\n";
+    std::cout << "u^T = \n" << u.transpose();
+
     return 0;
 }

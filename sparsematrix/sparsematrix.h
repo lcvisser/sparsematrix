@@ -17,23 +17,12 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 
 #include <algorithm>
-#include <cassert>
+#include <initializer_list>
 #include <stdexcept>
-#include <functional>
 #include <map>
 #include <tuple>
 #include <utility>
-#include <vector>
 
-struct ColumnMajorOrder
-{
-    bool operator()(const std::pair<size_t, size_t>& lhs, const std::pair<size_t, size_t>& rhs) const
-    {
-        return (lhs.second < rhs.second) ? true :  // check column (<)
-                (lhs.second > rhs.second) ? false :  // check column (>)
-                (lhs.first < rhs.first) ? true : false;  // columns equal, check row
-    }
-};
 
 /**
  * mxn matrix has m rows and n columns
@@ -42,7 +31,7 @@ template <size_t M, size_t N, typename T>
 class SparseMatrix
 {
     private:
-        // Keys are pairs (i,j), which are sorted first by i and thn by j, resulting in storage in row-major order
+        // Keys are pairs (i,j), which are sorted first by i and then by j, resulting in storage in row-major order
         std::map<std::pair<size_t, size_t>, T> _values;
 
     public:
@@ -212,6 +201,17 @@ class SparseMatrix
                         lhs(r, c) = v;
                     }
                 }
+            }
+
+            return lhs;
+        }
+
+        SparseMatrix<N, M, T> transpose()
+        {
+            SparseMatrix<N, M, T> lhs;
+            for (auto elem = _values.cbegin(); elem != _values.cend(); ++elem)
+            {
+                lhs(elem->first.second, elem->first.first) = elem->second;
             }
 
             return lhs;
