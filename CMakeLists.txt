@@ -14,4 +14,5 @@ foreach(TEST_EXE test_basic test_mult_1d test_mult_2d test_scaling test_dim_erro
              COMMAND ${PROJECT_SOURCE_DIR}/bin/run_test_with_coverage ${CMAKE_CXX_COMPILER_ID} $<TARGET_FILE:${TEST_EXE}>)
 endforeach()
 
-add_executable(example example.cpp)
+add_executable(example examples/example.cpp)
+target_include_directories(example PRIVATE sparsematrix)

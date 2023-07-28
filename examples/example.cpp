@@ -18,7 +18,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 #include <iostream>
 
-#include "sparsematrix/sparsematrix.h"
+#include "sparsematrix.h"
 
 template<size_t M, size_t N, typename T>
 std::ostream& operator<<(std::ostream& os, const SparseMatrix<M, N, T>& m)
