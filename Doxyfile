@@ -1,0 +1,11 @@
+# Doxyfile 1.9.3
+
+DOXYFILE_ENCODING      = UTF-8
+PROJECT_NAME           = sparsematrix
+PROJECT_NUMBER         = 0.1
+PROJECT_BRIEF          = "A sparse matrix library in C++11"
+INPUT                  = ./sparsematrix/sparsematrix.h ./examples/example.cpp ./README.md
+OUTPUT_DIRECTORY       = ./build/doc
+SOURCE_BROWSER         = YES
+EXTRACT_PRIVATE        = YES
+USE_MDFILE_AS_MAINPAGE = README.md
