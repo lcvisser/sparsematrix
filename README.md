@@ -4,6 +4,16 @@
 
 This is a sparse matrix implementation in C++11. It is a header-only library.
 
+A sparse matrix is a matrix that only has a few non-zero valued elements. When such matrices are big (many
+rows/columns), it becomes is often advantagous from a memory usage perspective to only save these non-zero elements to
+memory. This of course requires some overhead to keep track of where those nonzero elements are, for example when doing
+addition or subtraction.
+
+This implementation is very simple and uses a `std::map` to store elements and uses the standard library to efficiently
+perform operations. It is a very basic implementation that is probably outperformed by more advanced libraries. Its
+intended use is a quick solution for projects where only the basics are needed.
+
+
 ## Usage
 
 ### Create a matrix
@@ -55,6 +65,7 @@ w = s * t;  // error, dimension mismatch
 ```
 
 See the provided example and the tests for more usage guidelines.
+
 
 ## Building the example and tests
 

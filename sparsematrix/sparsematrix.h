@@ -202,13 +202,11 @@ class SparseMatrix
          */
         SparseMatrix& operator+=(const SparseMatrix& rhs)
         {
-            auto elem = rhs.cbegin();
-            while (elem != rhs.cend())
+            for (auto elem = rhs.cbegin(); elem != rhs.cend(); ++elem)
             {
                 size_t i, j;
                 std::tie(i, j) = elem->first;
                 this->operator()(i, j) += elem->second;
-                ++elem;
             }
             return *this;
         }
@@ -337,7 +335,7 @@ class SparseMatrix
             {
                 for (size_t c = 0; c < P; ++c)
                 {
-                    // For C = A * B, element C(x,y) = sum_i A(x,i) * B(i, y)
+                    // For C = A * B, element C(x,y) = sum_i A(x,i) * B(i, y).
                     T v = 0;
                     for (size_t i = 0; i < N; ++i)
                     {
@@ -346,6 +344,8 @@ class SparseMatrix
                             v += const_cast<SparseMatrix<M, N, T>&>(op1)(r, i) * const_cast<SparseMatrix<N, P, T>&>(op2)(i, c);
                         }
                     }
+
+                    // Add the element only if it is non-zero.
                     if (v != 0)
                     {
                         lhs(r, c) = v;
