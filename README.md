@@ -49,8 +49,9 @@ u = s - t;
 SparseMatrix<5, 7, float> v;
 SparseMatrix<3, 7, float> w;
 
-w = s * u;
-w = u * s;  // error, dimension mismatch
+w = s * v;
+w = v * s;  // error, dimension mismatch
+w = s * t;  // error, dimension mismatch
 ```
 
 See the provided example and the tests for more usage guidelines.
